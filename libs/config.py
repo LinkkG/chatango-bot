@@ -44,15 +44,8 @@ def load_langs():
     langs.clear()
     for path in os.scandir("langs/"):
         lang = os.path.splitext(os.path.split(path.path)[1])[0]
-        langs[lang] = {}
         with open(path.path, encoding = "utf-8") as file:
-            for line in file:
-                data = line.strip().split(" ", 1)
-                if len(data) == 1 and data[0]:
-                    raise ValueError("Invalid format")
-                if data[0]:
-                    id, text = data
-                    langs[lang][id] = text
+            langs[lang] = json.load(file)
 
 def load_cmds():
     cmds.clear()
@@ -162,5 +155,3 @@ def get_room(name):
             if k not in rooms_config[name]:
                 rooms_config[name][k] = v
     return rooms_config[name]
-
-
