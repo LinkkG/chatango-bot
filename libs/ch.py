@@ -506,9 +506,8 @@ class PM:
     func = "_rcmd_" + cmd
     if hasattr(self, func):
       getattr(self, func)(args)
-    else:
-      if debug:
-        print("unknown data: "+str(data))
+    elif debug:
+        print("unknown data: " + str(data))
 
   ####
   # Properties
@@ -549,13 +548,15 @@ class PM:
       self._blocklist.add(User(name))
 
   def _rcmd_idleupdate(self, args):
-    # FIX
     user = User(args[0])
-    last_on, is_on, idle = self._status[user]
-    if args[1] == '1':
-      self._status[user] = [last_on, is_on, 0]
+    if user in self._status:
+        last_on = self._status[user][0]
     else:
-      self._status[user] = [last_on, is_on, time.time()]
+        last_on = 0
+    if args[1] == '1':
+      self._status[user] = [last_on, True, 0]
+    else:
+      self._status[user] = [last_on, True, time.time()]
 
   def _rcmd_track(self, args):
     user = User(args[0])
@@ -2378,7 +2379,8 @@ def User(name, *args, **kw):
   if not user:
     user = _User(name = name, *args, **kw)
     _users[name] = user
-  user.capser = capser
+  if not hasattr(user, "capser") or not capser.islower():
+    user.capser = capser
   return user
 
 class _User:
