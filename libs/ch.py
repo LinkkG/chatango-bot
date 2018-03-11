@@ -1610,13 +1610,13 @@ class RoomManager:
   _PMPort = 5222
   _TimerResolution = 0.2 #at least x times per second
   _pingDelay = 20
-  _userlistMode = Userlist_Recent
+  _userlistMode = Userlist_All
   _userlistUnique = True
   _userlistMemory = 50
   _userlistEventUnique = False
   _tooBigMessage = BigMessage_Multiple
   _maxLength = 1800
-  _maxHistoryLength = 150
+  _maxHistoryLength = 500
 
   def __repr__(self):
     return "<%s: %s>" % (self.__class__.__name__, self.user.name)
