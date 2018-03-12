@@ -86,7 +86,7 @@ def save_rooms(rooms_per_line):
             file.write(room)
             if (i + 1) % rooms_per_line == 0:
                 file.write("\n")
-            elif (i + 1) % rooms_per_line != rooms_per_line - 1:
+            else:
                 file.write(" ")
 
 def save_owners(owners_per_line):
@@ -95,7 +95,7 @@ def save_owners(owners_per_line):
             file.write(owner)
             if (i + 1) % owners_per_line == 0:
                 file.write("\n")
-            elif (i + 1) % owners_per_line != owners_per_line - 1:
+            else:
                 file.write(" ")
 
 def save_users():
