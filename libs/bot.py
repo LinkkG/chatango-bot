@@ -11,17 +11,16 @@ class Bot(ch.RoomManager):
     @event
     def onInit(self):
         pass
-    
+
     @event
     def onConnect(self, room):
         croom = config.get_room(room.name)
-        room.channels = tuple(croom.channels)
-        
+        room.channels = tuple(croom["channels"])
+
     @event
-    def onMessage(self, room, user, message):        if user == self.user: return
-
+    def onMessage(self, room, user, message):
+        if user == self.user: return
         if not message.body.strip(): return
-
         msgdata = message.body.strip().split(" ",1)
 
         if user.name not in config.users:

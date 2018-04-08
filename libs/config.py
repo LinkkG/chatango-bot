@@ -88,7 +88,6 @@ def save_rooms(rooms_per_line):
                 file.write("\n")
             else:
                 file.write(" ")
-            file.write("\n")
 
 def save_owners(owners_per_line):
     with open("config/owners.txt", "w") as file:
@@ -98,7 +97,6 @@ def save_owners(owners_per_line):
                 file.write("\n")
             else:
                 file.write(" ")
-            file.write("\n")
 
 def save_users():
     for name, val in users.items():
@@ -107,7 +105,7 @@ def save_users():
             json.dump(val, file)
 
 def save_rooms_config():
-    for name, val in rooms.config.items():
+    for name, val in rooms_config.items():
         path = os.path.join("rooms", name + ".json")
         with open(path, "w", encoding = "utf-8") as file:
             json.dump(val, file)
@@ -124,8 +122,8 @@ def load_all():
     load_rooms_config()
 
 def save_all():
-    save_rooms(10)
-    save_owners(10)
+    save_rooms(5)
+    save_owners(5)
     save_auth()
     save_users()
     save_rooms_config()

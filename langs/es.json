@@ -1,7 +1,7 @@
 {
   "hello": "Hola {}!",
   "done": "Hecho.",
-  "available_languages": "Los comandos disponibles son: {}.",
+  "available_languages": "Los lenguajes disponibles son: {}.",
   "unsupported_language": "El lenguaje {} no es soportado.",
   "language_changed": "Lenguaje cambiado exitosamente a {}.",
   "current_prefix": "Tu prefijo actual es {!r}.",
