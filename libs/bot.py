@@ -1,11 +1,7 @@
+import html
 import ch
 import config
-
 from utils import event
-
-import html
-
-# PREFIX = "->" # you can also mention the bot instead of using the prefix
 
 class Bot(ch.RoomManager):
     @event
@@ -21,37 +17,22 @@ class Bot(ch.RoomManager):
     def onMessage(self, room, user, message):
         if user == self.user: return
         if not message.body.strip(): return
-        msgdata = message.body.strip().split(" ",1)
 
+        msgdata = message.body.strip()
         if user.name not in config.users:
             PREFIX = config.default_user["prefix"]
         else:
             PREFIX = config.get_user(user.name)["prefix"]
 
-        if len(msgdata) == 2:
-            cmd, args = msgdata
-        else:
-            cmd, args = msgdata[0], ""
+        if msgdata.startswith(PREFIX):
+            msgdata = msgdata[len(PREFIX):].lstrip()
+        elif msgdata.startswith("@" + self.name.lower()):
+            msgdata = msgdata[len(self.name):].lstrip()
 
-        if cmd == PREFIX:
-            msgdata = args.split(" ",1)
-            if len(msgdata) == 2:
-                cmd, args = msgdata
-            else:
-                cmd, args = msgdata[0], ""
-        elif cmd.lower() == "@" + self.user.name.replace("#", "").replace("!", ""):
-            msgdata = args.split(" ", 1)
-            if len(msgdata) == 2:
-                cmd, args = msgdata
-            else:
-                cmd, args = msgdata[0], ""
-
-        elif cmd[:len(PREFIX)] == PREFIX:
-            cmd = cmd[len(PREFIX):]
-        else:
-            return
-
-        cmd = cmd.lower().strip()
+        # partition always returns a 3 items tuple
+        cmd, _, msgdata = msgdata.partition(" ")
+        args = msgdata.split()
+        cmd = cmd.lower()
 
         if cmd not in config.cmds:
             return

@@ -71,10 +71,10 @@ def load_rooms_config():
 
 def load_users():
     users.clear()
-    for path in os.scandir("users/"):
-        name = os.path.splitext(os.path.split(path.path)[1])[0].lower()
-        with open(path.path, encoding = "utf-8") as file:
-            users[name] = json.load(file)
+    with open("config/users.txt", encoding = "utf-8") as file:
+        for line in file:
+            user = json.loads(line)
+            users[user[name]] = user
 
 def save_auth():
     with open("config/auth.json", "w") as file:
@@ -99,10 +99,10 @@ def save_owners(owners_per_line):
                 file.write(" ")
 
 def save_users():
-    for name, val in users.items():
-        path = os.path.join("users", name + ".json")
-        with open(path, "w", encoding = "utf-8") as file:
+    with open("config/users.txt", "w", encoding = "utf-8") as file:
+        for name, val in users.items():
             json.dump(val, file)
+            file.write("\n")
 
 def save_rooms_config():
     for name, val in rooms_config.items():

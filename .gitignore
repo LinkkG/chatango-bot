@@ -1,5 +1,4 @@
 **.pyc
 *.pyc
 rooms/
-users/
-config/
+config/auth.json
