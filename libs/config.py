@@ -74,7 +74,7 @@ def load_users():
     with open("config/users.txt", encoding = "utf-8") as file:
         for line in file:
             user = json.loads(line)
-            users[user[name]] = user
+            users[user["name"]] = user
 
 def save_auth():
     with open("config/auth.json", "w") as file:
