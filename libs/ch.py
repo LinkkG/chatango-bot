@@ -287,9 +287,8 @@ class _ANON_PM_OBJECT:
     func = "_rcmd_" + cmd
     if hasattr(self, func):
       getattr(self, func)(args)
-    else:
-      if debug:
-        print("unknown data: "+str(data))
+    elif debug:
+        print("unknown data:", data, file=sys.stderr)
 
   def _getManager(self): return self._mgr
 
@@ -507,7 +506,7 @@ class PM:
     if hasattr(self, func):
       getattr(self, func)(args)
     elif debug:
-        print("unknown data: " + str(data))
+        print("unknown data:", data, file=sys.stderr)
 
   ####
   # Properties
@@ -928,7 +927,8 @@ class Room:
             elif info.opcode == _ws.TEXT: # actual data
                 self._process(payload)
             elif debug:
-                print("unhandled frame: " + repr(info) + " with payload " + repr(payload))
+                print("unhandled frame:", info, "with payload", payload,
+                     file=sys.stderr)
             r = _ws.check_frame(self._rbuf)
   def _process(self, data):
     """
@@ -944,7 +944,7 @@ class Room:
     if hasattr(self, func):
         getattr(self, func)(args)
     elif debug:
-        print("unknown data: " + str(data))
+        print("unknown data:", data, file=sys.stderr)
 
   ####
   # Received Commands
@@ -1389,7 +1389,9 @@ class Room:
     """
     compatibility wrapper for deleteMessage
     """
-    print("[obsolete] the delete function is obsolete, please use deleteMessage")
+    print(
+        "[obsolete] the delete function is obsolete, please use deleteMessage",
+        file=sys.stderr)
     return self.deleteMessage(message)
 
   def rawClearUser(self, unid, ip, user):
@@ -1724,7 +1726,7 @@ class RoomManager:
         print(text)
         break
       except UnicodeEncodeError as ex:
-        text = (text[0:ex.start]+'(unicode)'+text[ex.end:])
+        text = text[:ex.start] + '?' + text[ex.end:]
 
   def onConnect(self, room):
     """
@@ -2255,23 +2257,22 @@ class RoomManager:
             con = [c for c in conns if c._sock == sock][0]
             try:
               data = sock.recv(1024)
-              if(len(data) > 0):
+              if data:
                 con._feed(data)
               else:
                 con.disconnect()
             except socket.error:
-              pass
+              if debug: raise
           for sock in wr:
             con = [c for c in conns if c._sock == sock][0]
             try:
               size = sock.send(con._wbuf)
               con._wbuf = con._wbuf[size:]
             except socket.error:
-              pass
+              if debug: raise
           for sock in sp:
             con = [c for c in conns if c._sock == sock][0]
-            if debug:
-                print(con)
+            if debug: print(con, file=sys.stderr)
       self._tick()
 
   @classmethod
