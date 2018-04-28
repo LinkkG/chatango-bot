@@ -1,4 +1,6 @@
 config/auth.json
+config/rooms.txt
+config/owners.txt
 **.pyc
 *.pyc
 rooms/
