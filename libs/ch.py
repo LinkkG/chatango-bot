@@ -1219,6 +1219,7 @@ class Room:
     self._callEvent("onBan", user, target)
 
   def _rcmd_unblocked(self, args):
+    args = ":".join(args).split(";")[-1].split(":")
     if args[2] == "": return
     target = User(args[2])
     user=User(args[3])
