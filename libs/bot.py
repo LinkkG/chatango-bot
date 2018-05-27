@@ -27,8 +27,10 @@ class Bot(ch.RoomManager):
 
         if msgdata.startswith(PREFIX):
             msgdata = msgdata[len(PREFIX):].lstrip()
-        elif msgdata.startswith("@" + self.name.lower()):
-            msgdata = msgdata[len(self.name):].lstrip()
+        elif msgdata.lower().startswith("@" + self.name.lower()):
+            msgdata = msgdata[len(self.name) + 1:].lstrip()
+        else:
+            return
 
         # partition always returns a 3 items tuple
         cmd, _, msgdata = msgdata.partition(" ")
