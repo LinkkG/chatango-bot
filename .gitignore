@@ -1,4 +1,4 @@
 **.pyc
 *.pyc
-rooms/
 config/auth.json
+/.vs

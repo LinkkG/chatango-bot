@@ -2,7 +2,7 @@ import config
 
 if user.name[0] not in ("#", "!"):
     cuser = config.get_user(user.name) # get the config of the user
-    lang = (args.split() or [""])[0].lower() # we only want the first word
+    lang = args[0].lower() if args else ""
 
     if not lang: # the user hasn't used arguments
         # display the available languages
@@ -14,6 +14,7 @@ if user.name[0] not in ("#", "!"):
         cuser["lang"] = lang
         # language changed successfully
         msg = config.get_lang(cuser["lang"], "language_changed").format(cuser["lang"])
-    room.message(msg)
+    
 else:
-    room.message(config.get_lang("en", "not_for_anons"))
+    msg = config.get_lang("en", "not_for_anons")
+room.message(msg)
