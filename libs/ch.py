@@ -1417,19 +1417,13 @@ class Room:
 
   def clearall(self):
     """Clear all messages. (Mods only)"""
-    if self.getLevel(User(self.currentname)) > 0:
-      if User(self.currentname) == self._owner:
-        self._sendCommand("clearall")
-        self._sendCommand("getannouncement")
-        self._crearing_all = True
-      else:
-        msgs = self._msgs.values()
-        for user in list(set([x.user for x in msgs])):
-          msg = self.getLastMessage(user)
-          if msg and hasattr(msg, "unid"):
-            self.clearUser(user)
-      return True
-    return False
+    if self.owner == self.mgr.user:
+      self._sendCommnad("clearall")
+    elif self.getLevel(self.mgr.user):
+      for user in set(x.user for x in self._msgs.values()):
+        msg = self.getLastMessage(user)
+        if msg and hasattr(msg, "unid"):
+          self.clearUser(user)
 
   def rawBan(self, name, ip, unid):
     """
