@@ -752,6 +752,7 @@ class Room:
     self._unbanlist = dict()
     self._channels = 0
     self._headers_parsed = False
+    self._announcement = [0, 0, '']  # Status,time,text
 
     # Inited vars
     if self._mgr: self._connect()
@@ -949,6 +950,11 @@ class Room:
   ####
   # Received Commands
   ####
+  def _rcmd_annc(self, args):
+    self._announcement[0] = int(args[0])
+    self._announcement[2] = ':'.join(args[2:])
+    self._callEvent('onAnnouncementUpdate', ':'.join(args[2:]))
+
   def _rcmd_ok(self, args):
     # if no name, join room as anon and no password
     if args[2] == "N" and self.mgr.password == None and self.mgr.name == None:
@@ -981,6 +987,7 @@ class Room:
   def _rcmd_inited(self, args):
     self._sendCommand("g_participants", "start")
     self._sendCommand("getpremium", "1")
+    self._sendCommand("getannouncement")
     self.requestBanlist()
     self.requestUnBanlist()
     if self._connectAmmount == 0:
@@ -1111,13 +1118,11 @@ class Room:
     self._i_log.append(msg)
 
   def _rcmd_getannc(self, args):
-    active = args[0]
-    room  = args[1]
-    seconds = args[3]
-    message = ":".join(args[4:])
-    if self._crearing_all:
-        self._sendCommand("updateannouncement", active, seconds, message)
-        self._crearing_all = False
+    if len(args) < 4 or args[0] == 'none':
+      return # Room has no announcement
+    self._announcement[0] = int(args[0])
+    self._announcement[1] = int(args[3])
+    self._announcement[2] = ":".join(args[4:])
 
   def _rcmd_g_participants(self, args):
     args = ":".join(args)
@@ -1308,6 +1313,21 @@ class Room:
         self._sendCommand("bm","ibrs", str(_channel), msg)
     else:
         self.rawMessage(msg)
+
+  def setAnnouncement(self, enabled=False, time=0, announcement=None):
+    """
+    Change group announcement or just enable/disable with first argument
+    @param enabled: announcement status, default 0/False for disabled, 1/True for enabled, 3 for enabled with bg
+    @type enabled: int
+    @param time: seconds between each announcement
+    @type time: int
+    @param announcement: message to send
+    @type announcement: str
+    """
+    if self.getLevel(self.user)>0:
+      self._sendCommand('updateannouncement', int(enabled), time or 60, announcement or self._announcement[2])
+      return True
+    return False
 
   def setBgMode(self, mode):
     """turn on/off bg"""
@@ -1731,6 +1751,16 @@ class RoomManager:
         break
       except UnicodeEncodeError as ex:
         text = text[:ex.start] + '?' + text[ex.end:]
+
+  def onAnnouncement(self, room, announcement):
+    """
+    Called when an announcement is sent in the room
+    @type room: Room
+    @param room: room where the event occured
+    @param announcement: announcement sent
+    @type announcement: str
+    """
+    pass
 
   def onConnect(self, room):
     """
