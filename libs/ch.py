@@ -953,7 +953,7 @@ class Room:
   def _rcmd_annc(self, args):
     self._announcement[0] = int(args[0])
     self._announcement[2] = ':'.join(args[2:])
-    self._callEvent('onAnnouncementUpdate', ':'.join(args[2:]))
+    self._callEvent('onAnnouncement', ':'.join(args[2:]))
 
   def _rcmd_ok(self, args):
     # if no name, join room as anon and no password
